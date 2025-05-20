@@ -1,28 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css';
 
 import homeIcon from '../assets/home.png';
+import bgHome from '../assets/bghome.png';
 import apartmentIcon from '../assets/apartmentLogo.png';
+import bgApartment from '../assets/aparment.png';
+import officeBg from '../assets/officeBg.jpg';
 import office from '../assets/office.png';
+import bgVilla from '../assets/bgVilla.jpg';
 import villa from '../assets/villa.png';
 
 const Category = () => {
-  const [category, setCategory] = useState([]);
-
-  useEffect(() => {
-    fetch("http://localhost:5000/category")
-      .then(res => res.json())
-      .then(data => {
-        setCategory(data);
-      });
-  }, []);
-
-  const logos = [
-    { logo: homeIcon },
-    { logo: apartmentIcon },
-    { logo: office },
-    { logo: villa },
+  const categories = [
+    { title: 'House', icon: homeIcon, bg: bgHome },
+    { title: 'Apartment', icon: apartmentIcon, bg: bgApartment },
+    { title: 'Office', icon: office, bg: officeBg },
+    { title: 'Villa', icon: villa, bg: bgVilla },
   ];
 
   return (
@@ -35,6 +29,7 @@ const Category = () => {
 
         <div className="mt-10">
           <Splide
+            aria-label="Property Categories"
             options={{
               type: 'loop',
               perPage: 4,
@@ -48,17 +43,28 @@ const Category = () => {
               },
             }}
           >
-            {category.map((item, idx) => (
-              <SplideSlide key={item.id}>
-                <div className="relative w-[280px] h-[350px] rounded-[8px] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 mx-auto">
+            {categories.map((item, idx) => (
+              <SplideSlide
+                key={idx}
+                tabIndex={0} // keyboard focusable
+                aria-label={`Category: ${item.title}`}
+              >
+                <div className="relative w-full max-w-[280px] h-[350px] rounded-[8px] overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 mx-auto cursor-pointer">
                   <img
-                    src={item.imag}
-                    alt={item.title}
-                    className="absolute inset-0 w-full h-full object-cover"
+                    src={item.bg}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-in-out hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-white">
-                    <img src={logos[idx % logos.length].logo} className="w-12 h-12 mb-2" alt="icon" />
-                    <span className="text-lg font-medium">{item.title}</span>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent flex flex-col justify-center items-center text-white px-6">
+                    <img
+                      src={item.icon}
+                      alt={`${item.title} icon`}
+                      className="w-12 h-12 mb-4"
+                      loading="lazy"
+                    />
+                    <span className="text-lg font-semibold tracking-wide">{item.title}</span>
                   </div>
                 </div>
               </SplideSlide>
